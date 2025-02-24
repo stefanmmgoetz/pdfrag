@@ -16,4 +16,6 @@ def main(pdfdir: str, mddir: str):
 
 if __name__ == '__main__':
     pdfdir, mddir = argv[1], argv[2]
+    if not Path(mddir).exists():
+        Path(mddir).mkdir()
     main(pdfdir, mddir)

@@ -2,3 +2,6 @@ pymupdf4llm
 tqdm
 langchain
 langchain-core
+langchain-huggingface
+langchain-community
+nltk
