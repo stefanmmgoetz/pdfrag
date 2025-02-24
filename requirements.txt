@@ -1,0 +1,4 @@
+pymupdf4llm
+tqdm
+langchain
+langchain-core
