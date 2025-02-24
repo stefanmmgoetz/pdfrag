@@ -5,7 +5,7 @@ This program does the following:
 1. Converts a folder of PDF documents to markdown. (done)
 2. Creates a vector database of sentences embedding (a-la BERT) extracted from markdown files. (done)
 3. Identifies a set of most relevant sentences from the PDF documents to the user prompt. (provisionally done, additional data cleaning may be required)
-4. Injects the most relevant sentences into a generated large language model prompt to synthesize into a response to a user query. (not yet done)
+4. Injects the most relevant sentences into a generative large language model prompt to synthesize into a response to a user query. (not yet done)
 
 ## Installation
 
