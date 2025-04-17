@@ -6,3 +6,4 @@ env/
 bib/
 secret.txt
 *.pdf
+.DS_Store

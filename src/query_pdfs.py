@@ -9,8 +9,8 @@ from langchain.vectorstores import Chroma
 from glob import glob
 from tqdm import tqdm
 from sklearn.decomposition import PCA
-from umap import UMAP
-import plotly.express as px
+# from umap import UMAP
+# import plotly.express as px
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
 import pandas as pd
