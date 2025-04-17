@@ -6,4 +6,4 @@ source env/bin/activate
 
 read -p 'Number of sentences: ' numsentences
 read -p 'Query: ' query
-python src/query_pdfs.py . $numsentences "$query"
+python src/query_pdfs.py . $numsentences "$query" 2>/dev/null
