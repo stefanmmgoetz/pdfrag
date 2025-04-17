@@ -1,6 +1,7 @@
 #!/bin/bash
 
-echo $0
+ROOT=$(dirname $(dirname $0))
+cd $ROOT
 
 if [ ! -d env ]; then
 	python -m venv env
