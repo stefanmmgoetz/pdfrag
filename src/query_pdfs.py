@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings('ignore')
 from sklearn.preprocessing import scale
 from langchain_core.documents.base import Document
 from langchain_openai import ChatOpenAI
@@ -13,7 +15,7 @@ from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
 import pandas as pd
 import numpy as np
-import warnings
+
 import re
 
 def get_db(dbpath: str, model_name: str = "joe32140/ModernBERT-base-msmarco"):
@@ -44,8 +46,7 @@ def query_db(db, query: str, k: int = 30):
     ])
     return df_response
 
-def main(rootdir, k):
-    warnings.filterwarnings('ignore')
+def main(rootdir, k, query):
     
     BIBDIR=f'{rootdir}/bib'
     db = get_db(BIBDIR)
@@ -64,7 +65,7 @@ def main(rootdir, k):
     with open(SYSTEM) as handle:
         system_def = handle.read()
     
-    query = input('Query: ')
+    # query = input('Query: ')
     
     df_hits = query_db(db, query, k=k)
     sources = list('[' + (df_hits.index + 1).astype(str) + '] ' + df_hits.sentence)
@@ -115,5 +116,5 @@ def main(rootdir, k):
 
 from sys import argv
 if __name__ == '__main__':
-    rootdir, k = argv[1], int(argv[2])
-    main(rootdir, k)
+    rootdir, k, query = argv[1], int(argv[2]), argv[3]
+    main(rootdir, k, query)
