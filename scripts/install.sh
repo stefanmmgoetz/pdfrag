@@ -2,7 +2,6 @@
 
 ROOT=$(dirname $(dirname $0))
 cd $ROOT
-echo $(pwd)
 
 OS=$(uname)
 
@@ -13,7 +12,7 @@ if [[ ${OS} == 'Darwin' ]]; then
 	fi
 	if [ ! -f /opt/homebrew/bin/python3.9 ]; then
 		echo 'Python 3.9 not detected, installing Python 3.9...'
-		/opt/homebrew/bin/brew install python@3.9
+		/opt/homebrew/bin/brew install python@3.9 zenity
 	fi
 	PYTHON=/opt/homebrew/bin/python3.9
 else

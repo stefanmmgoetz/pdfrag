@@ -5,9 +5,14 @@ cd $ROOT
 source env/bin/activate
 
 if [ ! -f secret.txt ]; then
-	echo 'API key file not detected... please drop secret.txt into the program directory to run queries.'
-	read -p 'Press ENTER to continue.'
-	exit 1
+	if [[ $(uname) == 'Darwin' ]]; then
+		SECRET=$(/opt/homebrew/bin/zenity --file-selection --title="Select secret file")
+		cp $SECRET secret.txt
+	else
+		echo 'API key file not detected... please drop secret.txt into the program directory to run queries.'
+		read -p 'Press ENTER to continue.'
+		exit 1
+	fi
 fi
 
 while true; do
