@@ -7,3 +7,4 @@ bib/
 secret.txt
 *.pdf
 .DS_Store
+*.ipynb

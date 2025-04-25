@@ -14,3 +14,6 @@ python src/pdf2mdd.py pdfs mdd
 echo 'Updating vector database...'
 python src/gen_vector_db.py mdd bib
 # echo ${MDD2DB_CMD}
+echo 'Database is successfully updated! (unless you see big error message above lol)'
+echo
+read -p '--- Press ENTER to continue ---'
