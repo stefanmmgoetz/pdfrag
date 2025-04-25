@@ -12,7 +12,11 @@ if [[ ${OS} == 'Darwin' ]]; then
 	fi
 	if [ ! -f /opt/homebrew/bin/python3.9 ]; then
 		echo 'Python 3.9 not detected, installing Python 3.9...'
-		/opt/homebrew/bin/brew install python@3.9 zenity
+		/opt/homebrew/bin/brew install python@3.9
+	fi
+	if [ ! -f /opt/homebrew/bin/zenity ]; then
+		echo 'Zenity (for GUI) not detected, installing Zenity...'
+		/opt/homebrew/bin/brew install zenity
 	fi
 	PYTHON=/opt/homebrew/bin/python3.9
 else
