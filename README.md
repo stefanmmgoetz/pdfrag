@@ -5,21 +5,29 @@ This program does the following:
 1. Converts a folder of PDF documents to markdown. (done)
 2. Creates a vector database of sentences embedding (a-la BERT) extracted from markdown files. (done)
 3. Identifies a set of most relevant sentences from the PDF documents to the user prompt. (provisionally done, additional data cleaning may be required)
-4. Injects the most relevant sentences into a generative large language model prompt to synthesize into a response to a user query. (not yet done)
+4. Injects the most relevant sentences into a generative large language model prompt to synthesize into a response to a user query. (done)
 
 ## Installation
 
-Coming soon...
+On the Mac/Linux, simply run the scripts/install.sh script in the terminal or by double clicking on it.
+
+On Windows, coming soon...
 
 ## Usage
 
-More details better instructions coming soon.
+The functionality of this program is split into a set of functions, which are contained within the "scripts" folder.
 
-```bash
-# converting a folder with PDFs into a folder of markdown files
-python src/pdf2mdd.py pdfs mdd
-# generating a sentence vector database folder out of the markdown files folder
-python src/gen_vector_db.py mdd bib
-# querying the sentence vector database folder for relevant entries (showcase, saves hits to test.csv)
-python src/query_vector_db.py bib test.csv 'What are the sensory modalities that contribute to self-motion perception, gait, and balance function?'
-```
+### pdfrag/scripts/upload_pdfs.sh
+
+Opens a dialog for you to select a folder with PDFs to be moved to: pdfrag/pdfs
+
+### pdfrag/scripts/update_db.sh
+
+Runs the conversion from pdfrag/pdfs to markdown files in pdfrag/mdd, and subsequently embeds the sentences in the resulting markdown files into the vector database.
+
+### pdfrag/scripts/query.sh
+
+Receives a user query, then fetches top k sentences from the vector database, injects them as a context to a generator model (ChatGPT API by default), and has it generate a response with citation to original documents (as implemented in system.txt file).
+
+
+
