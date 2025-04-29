@@ -9,13 +9,31 @@ This program does the following:
 
 ## Installation
 
-On the Mac/Linux, simply run the scripts/install.sh script in the terminal or by double clicking on it.
+### MacOS
 
-On Windows, coming soon...
+After unzipping the program folder:
 
-## Usage
+```bash
+cd pdfrag # wherever this is on your hard drive
+scripts/install.sh
+```
 
-The functionality of this program is split into a set of functions, which are contained within the "scripts" folder.
+This will install the Homebrew package manager (if not already installed), and set up proper version of Python (for the main program) and zenity (for the limited GUI elements).
+
+### Windows
+
+Coming soon...
+
+## Usage (MacOS only for now)
+
+The functionality of this program is split into a set of functions, which are contained within the "scripts" folder. To run the scripts, the recommended approach is to do it thru the terminal, from the main program directory:
+
+```bash
+cd pdfrag-main
+./scripts/upload_pdfs.sh # to batch upload a folder of PDFs to the pdfrag/pdfs
+./scripts/update_db.sh # generate MDD files and embed sentences into the vector database
+./scripts/query.sh # run the query
+```
 
 ### pdfrag/scripts/upload_pdfs.sh
 

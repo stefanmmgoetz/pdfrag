@@ -17,3 +17,7 @@ python src/gen_vector_db.py mdd bib
 echo 'Database is successfully updated! (unless you see big error message above lol)'
 echo
 read -p '--- Press ENTER to continue ---'
+
+mkdir -p {pdfs,mdd}/processed
+mv mdd/*.md mdd/processed/
+mv pdfs/*.pdf pdfs/processed/
