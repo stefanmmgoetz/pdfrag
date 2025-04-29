@@ -45,6 +45,12 @@ def chunk_iterable(iterable, max_size):
 
 def update_db(mddpath: str, dbpath: str, model_name: str = "joe32140/ModernBERT-base-msmarco"):
     model_kwargs = {'device': 'mps' if torch.backends.mps.is_available() else 'gpu' if torch.cuda.is_available() else 'cpu'}
+    if model_kwargs['device'] == 'mps':
+        print('Running on Metal Performance Shaders...')
+    elif model_kwargs['device'] == 'gpu':
+        print('Running on GPU...')
+    else:
+        print('Running on CPU...')
     encode_kwargs = {'normalize_embeddings': False}
     hf = HuggingFaceEmbeddings(
         model_name=model_name,
@@ -52,23 +58,19 @@ def update_db(mddpath: str, dbpath: str, model_name: str = "joe32140/ModernBERT-
         encode_kwargs=encode_kwargs
     )
     db = Chroma(persist_directory=dbpath, embedding_function=hf)
-    if model_kwargs['device'] == 'mps' or model_kwargs['device'] == 'gpu':
-        if model_kwargs['device'] == 'mps':
-            print('Running on Metal Performance Shaders...')
-        elif model_kwargs['device'] == 'gpu':
-            print('Running on GPU...')
-        all_docs = []
-        print('Reading in all the sentences...')
-        for path in glob(f'{mddpath}/*.md'):
-            all_docs += read_docs(path)
-        print('Processing sentences in chunks...')
-        for chunk in tqdm(list(chunk_iterable(all_docs, 1000))):
-            db.add_documents(chunk)
-    else:
-        print('Running on CPU...')
-        for path in tqdm(glob(f'{mddpath}/*.md')):
-            docs = read_docs(path)
-            db.add_documents(docs)
+    # if model_kwargs['device'] == 'mps' or model_kwargs['device'] == 'gpu':
+    #     all_docs = []
+    #     print('Reading in all the sentences...')
+    #     for path in glob(f'{mddpath}/*.md'):
+    #         all_docs += read_docs(path)
+    #     print('Processing sentences in chunks...')
+    #     for chunk in tqdm(list(chunk_iterable(all_docs, 1000))):
+    #         db.add_documents(chunk)
+    #else:
+        #print('Running on CPU...')
+    for path in tqdm(glob(f'{mddpath}/*.md')):
+        docs = read_docs(path)
+        db.add_documents(docs)
     return db
 
 if __name__ == '__main__':

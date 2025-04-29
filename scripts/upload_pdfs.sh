@@ -3,7 +3,8 @@
 ROOT=$(dirname $(dirname $0))
 # source env/bin/python
 cd $ROOT
-PDFS=($(/opt/homebrew/bin/zenity --file-selection --multiple --title="Upload PDFs" 2> /dev/null | tr '|' ' '))
+IFS='|'
+PDFS=($(/opt/homebrew/bin/zenity --file-selection --multiple --title="Upload PDFs" 2> /dev/null))
 
 echo
 newpdfs=0
