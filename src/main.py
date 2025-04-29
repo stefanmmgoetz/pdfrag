@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 
 from nicegui import ui, app
+import asyncio
 import query_pdfs
 import logging
 
 app.native.window_args['text_select'] = True
 
-def display_response(q, c_size):
+async def display_response(q, c_size):
     global l_responses, messages
-    l_responses.insert(
-        0, query_pdfs.main(q, c_size)
-    )
+    loop = asyncio.get_running_loop()
+    res = await loop.run_in_executor(None, lambda: query_pdfs.main(q, c_size))
+    l_responses.insert(0, res)
     messages.clear()
     with messages:
         ui.chat_message(
@@ -19,8 +20,11 @@ def display_response(q, c_size):
                 avatar='https://robohash.org/ui'
         ).classes('w-full border flex-grow').style('font-size: 20px')
 
+def warmup():
+    query_pdfs.global_init('..')
+    query_pdfs.main('What is the meaning of life?', 50)
+
 def main():
-    global l_responses, l_messages
     ui.add_head_html('<style>.q-textarea.flex-grow .q-field__control { height: 100% }</style>')  # 2
     with prompt:
         user_query = ui.textarea(
@@ -39,6 +43,6 @@ prompt = ui.column().classes('w-full h-full')
 messages = ui.column().classes('w-full h-full')
 logging.getLogger().setLevel(logging.INFO)
 logging.info('Warming up...')
-query_pdfs.global_init('..')
+app.on_startup(warmup)
 logging.info('Starting program!')
 main()
