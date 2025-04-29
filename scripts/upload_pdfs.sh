@@ -1,6 +1,29 @@
 #!/bin/bash
 
 ROOT=$(dirname $(dirname $0))
+# source env/bin/python
 cd $ROOT
-PDFOLDER=$(/opt/homebrew/bin/zenity --file-selection --directory --title="Select PDF folder")
-cp $PDFOLDER/*.pdf pdfs/
+PDFS=($(/opt/homebrew/bin/zenity --file-selection --multiple --title="Upload PDFs" 2> /dev/null | tr '|' ' '))
+
+echo
+newpdfs=0
+for PDF in ${PDFS[@]}; do
+	pdfname=$(basename $PDF)
+	if [ -f pdfs/processed/$pdfname ]; then
+		echo "[WARN]: $pdfname is already in the library"
+	else
+		cp $PDF pdfs/
+		echo "[INFO]: added $pdfname"
+		((newpdfs++))
+	fi
+done
+echo
+
+echo
+if [ $newpdfs -gt 0 ]; then
+	echo "[INFO]: $newpdfs new PDFs uploaded."
+	echo '[INFO]: Updating database...'
+	./src/update_db.sh
+else
+	echo '[WARN]: No new PDFs uploaded.'
+fi

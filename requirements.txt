@@ -5,6 +5,7 @@ langchain-core
 langchain-huggingface
 langchain-community
 langchain-openai
+langchain-chroma
 nltk
 pandas
 chromadb

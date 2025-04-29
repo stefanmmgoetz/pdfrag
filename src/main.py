@@ -1,36 +1,44 @@
 #!/usr/bin/env python
 
-from nicegui import ui, context
+from nicegui import ui, app
 import query_pdfs
+import logging
 
-dud = query_pdfs.main('..', 50, 'What is the purpose of life?')
+app.native.window_args['text_select'] = True
 
-
-# def run_user_query(q):
-#     ui.chat_message(
-#         query_pdfs.main('..', 50, user_query.value),
-#         name='Robot', stamp='now',
-#         avatar='https://robohash.org/ui'
-#     )
-
-def display_response(response):
-    ui.chat_message(
-            response,
-            name='Robot', stamp='now',
-            avatar='https://robohash.org/ui'
+def display_response(q, c_size):
+    global l_responses, messages
+    l_responses.insert(
+        0, query_pdfs.main(q, c_size)
     )
+    messages.clear()
+    with messages:
+        ui.chat_message(
+                l_responses,
+                name='Robot', stamp='now',
+                avatar='https://robohash.org/ui'
+        ).classes('w-full border flex-grow').style('font-size: 20px')
 
-#ui.textarea().classes('w-full').on('keydown.enter', _enter)
+def main():
+    global l_responses, l_messages
+    ui.add_head_html('<style>.q-textarea.flex-grow .q-field__control { height: 100% }</style>')  # 2
+    with prompt:
+        user_query = ui.textarea(
+            label='User Prompt', placeholder='ask any question from your folder of PDFs'
+        ).classes('w-full border flex-grow')
+        context_size = ui.number(label='Context size', value=50)
+        ui.button(
+            'Run query!',
+            on_click=lambda: display_response(user_query.value, int(context_size.value))
+            
+        )
+    ui.run(native=True, reload=False)
 
-# context.get_client().content.classes('h-[100vh]')  # 1
-ui.add_head_html('<style>.q-textarea.flex-grow .q-field__control { height: 100% }</style>')  # 2
-user_query = ui.textarea(
-    label='Text', placeholder='start typing'
-).classes('w-full border flex-grow')
-ui.button(
-    'Run query!',
-    on_click=lambda: display_response(
-        query_pdfs.main('..', 50, user_query.value)
-    )
-)
-ui.run(native=True)
+l_responses = []
+prompt = ui.column().classes('w-full h-full')
+messages = ui.column().classes('w-full h-full')
+logging.getLogger().setLevel(logging.INFO)
+logging.info('Warming up...')
+query_pdfs.global_init('..')
+logging.info('Starting program!')
+main()

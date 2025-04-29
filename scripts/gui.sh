@@ -1,5 +1,7 @@
 #!/bin/bash
 
-cd $(dirname $0)
-cd ../src
-TOKENIZERS_PARALLELISM=false ../env/bin/python ./main.py
+ROOT=$(dirname $(dirname $0))
+cd $ROOT
+source env/bin/activate
+cd src
+TOKENIZERS_PARALLELISM=true ./main.py

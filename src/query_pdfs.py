@@ -2,26 +2,28 @@
 
 import warnings
 warnings.filterwarnings('ignore')
-from sklearn.preprocessing import scale
-from langchain_core.documents.base import Document
+# from sklearn.preprocessing import scale
+# from langchain_core.documents.base import Document
 from langchain_openai import ChatOpenAI
-from nltk.tokenize.punkt import PunktSentenceTokenizer
+# from nltk.tokenize.punkt import PunktSentenceTokenizer
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain.vectorstores import Chroma
-from glob import glob
-from tqdm import tqdm
-from sklearn.decomposition import PCA
+# from langchain.vectorstores import Chroma
+from langchain_chroma import Chroma
+# from glob import glob
+# from tqdm import tqdm
+# from sklearn.decomposition import PCA
 # from umap import UMAP
 # import plotly.express as px
-from sklearn.cluster import KMeans
-from sklearn.mixture import GaussianMixture
+# from sklearn.cluster import KMeans
+# from sklearn.mixture import GaussianMixture
+from sys import argv
 import pandas as pd
 import numpy as np
-
+import torch
 import re
 
 def get_db(dbpath: str, model_name: str = "joe32140/ModernBERT-base-msmarco"):
-    model_kwargs = {'device': 'cpu'}
+    model_kwargs = {'device': 'mps' if torch.backends.mps.is_available() else 'gpu' if torch.cuda.is_available() else 'cpu'}
     encode_kwargs = {'normalize_embeddings': False}
     hf = HuggingFaceEmbeddings(
         model_name=model_name,
@@ -48,8 +50,8 @@ def query_db(db, query: str, k: int = 30):
     ])
     return df_response
 
-def main(rootdir, k, query):
-    
+def global_init(rootdir):
+    global db, llm, system_def
     BIBDIR=f'{rootdir}/bib'
     db = get_db(BIBDIR)
     SECRET=f'{rootdir}/secret.txt'
@@ -66,13 +68,12 @@ def main(rootdir, k, query):
     SYSTEM=f'{rootdir}/system.txt'
     with open(SYSTEM) as handle:
         system_def = handle.read()
-    
-    # query = input('Query: ')
-    
+
+def main(query, k):
+    global db, llm
     df_hits = query_db(db, query, k=k)
     sources = list('[' + (df_hits.index + 1).astype(str) + '] ' + df_hits.sentence)
     context = '\n\n'.join(sources)
-    
     prompt = f"""
     [QUERY]
     {query}
@@ -89,18 +90,13 @@ def main(rootdir, k, query):
         ("human", prompt),
     ]
     ai_msg = llm.invoke(messages).content
-    
     matches = re.findall('[[][0-9]+[]]', ai_msg)
     source_indices = [
         int(match.replace('[', '').replace(']', '')) - 1
         for match in matches
     ]
     new_index_text = ['['+str(idx+1)+']' for idx in range(len(matches))]
-    #for old_idx, new_idx in zip(matches, new_index_text):
-    #    ai_msg = ai_msg.replace(old_idx, new_idx)
-    
     l_bib = []
-    
     new_ai_msg = ai_msg
     for idx, match in enumerate(matches):
         new_idx = '{'+str(idx+1)+'}'
@@ -108,17 +104,15 @@ def main(rootdir, k, query):
             new_ai_msg = new_ai_msg.replace(match, new_idx)
         source_bib = new_idx + f""" [{df_hits.iloc[source_indices[idx],:].source}]: {df_hits.sentence.iloc[source_indices[idx]]}"""
         l_bib.append(source_bib)
-    
     output = '\n --- QUERY --- \n' + \
         query + '\n\n --- RESPONSE --- \n' + \
         new_ai_msg + '\n\n --- CITATIONS --- \n' + \
         '\n\n'.join(l_bib)
-    if __name__ == '__main__':
-        print(output)
     return output
 
 
-from sys import argv
 if __name__ == '__main__':
     rootdir, k, query = argv[1], int(argv[2]), argv[3]
-    main(rootdir, k, query)
+    global_init(rootdir)
+    output = main(query, k)
+    print(output)

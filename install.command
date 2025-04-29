@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOT=$(dirname $(dirname $0))
+ROOT=$(dirname $0)
 cd $ROOT
 
 OS=$(uname)
@@ -27,6 +27,9 @@ if [ ! -d env ]; then
 	echo 'Installing Python dependencies...'
 	$PYTHON -m venv env
 	$ROOT/env/bin/pip install -r requirements.txt
+	$ROOT/env/bin/pip install \
+		--pre torch torchvision torchaudio \
+		--extra-index-url https://download.pytorch.org/whl/nightly/cpu
 else
 	echo 'Program is already installed!'
 fi
