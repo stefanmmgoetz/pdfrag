@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from sys import argv
@@ -14,7 +16,7 @@ def get_db(dbpath: str, model_name: str = "joe32140/ModernBERT-base-msmarco"):
     db = Chroma(persist_directory=dbpath, embedding_function=hf)
     return db
 
-def query_db(dbpath: str, csvpath: str, query: str, k: int = 30):
+def query_db(dbpath: str, csvpath: str, query: str, k: int = 50):
     db = get_db(dbpath)
     results = db.similarity_search_with_relevance_scores(query, k=k)
     df_response = pd.DataFrame([

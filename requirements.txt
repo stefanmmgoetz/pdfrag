@@ -8,3 +8,5 @@ langchain-openai
 nltk
 pandas
 chromadb
+nicegui
+pywebview

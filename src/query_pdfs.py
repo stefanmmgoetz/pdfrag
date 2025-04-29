@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import warnings
 warnings.filterwarnings('ignore')
 from sklearn.preprocessing import scale
@@ -107,12 +109,14 @@ def main(rootdir, k, query):
         source_bib = new_idx + f""" [{df_hits.iloc[source_indices[idx],:].source}]: {df_hits.sentence.iloc[source_indices[idx]]}"""
         l_bib.append(source_bib)
     
-    print('\n --- QUERY --- \n')
-    print(query)
-    print('\n --- RESPONSE --- \n')
-    print(new_ai_msg)
-    print('\n --- CITATIONS --- \n')
-    print('\n\n'.join(l_bib))
+    output = '\n --- QUERY --- \n' + \
+        query + '\n\n --- RESPONSE --- \n' + \
+        new_ai_msg + '\n\n --- CITATIONS --- \n' + \
+        '\n\n'.join(l_bib)
+    if __name__ == '__main__':
+        print(output)
+    return output
+
 
 from sys import argv
 if __name__ == '__main__':

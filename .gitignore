@@ -8,3 +8,5 @@ secret.txt
 *.pdf
 .DS_Store
 *.ipynb
+src/__pycache__
+*.csv
