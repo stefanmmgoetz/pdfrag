@@ -16,6 +16,7 @@ from langchain_chroma import Chroma
 # import plotly.express as px
 # from sklearn.cluster import KMeans
 # from sklearn.mixture import GaussianMixture
+from pathlib import Path
 from sys import argv
 import pandas as pd
 import numpy as np
@@ -69,7 +70,7 @@ def global_init(rootdir):
     with open(SYSTEM) as handle:
         system_def = handle.read()
 
-def main(query, k):
+def main(query, k, interactive=False):
     global db, llm
     df_hits = query_db(db, query, k=k)
     sources = list('[' + (df_hits.index + 1).astype(str) + '] ' + df_hits.sentence)
@@ -97,20 +98,39 @@ def main(query, k):
     ]
     new_index_text = ['['+str(idx+1)+']' for idx in range(len(matches))]
     l_bib = []
+    l_meta = {
+        'query': query,
+        'response': '',
+        'pdfpath': [],
+        'srcindex': [],
+        'srctext': []
+    }
     new_ai_msg = ai_msg
     for idx, match in enumerate(matches):
         new_idx = '{'+str(idx+1)+'}'
         while new_ai_msg.find(match) != -1:
             new_ai_msg = new_ai_msg.replace(match, new_idx)
-        source_bib = new_idx + f""" [{df_hits.iloc[source_indices[idx],:].source}]: {df_hits.sentence.iloc[source_indices[idx]]}"""
+        source_file = df_hits.iloc[source_indices[idx],:].source
+        source_text = df_hits.sentence.iloc[source_indices[idx]]
+        source_bib = new_idx + f""" [{source_file}]: {source_text}"""
         l_bib.append(source_bib)
-    output = '\n --- QUERY --- \n' + \
-        query + '\n\n --- RESPONSE --- \n' + \
-        new_ai_msg + '\n\n --- CITATIONS --- \n' + \
-        '\n\n'.join(l_bib)
-    return output
-
-
+        l_meta['pdfpath'].append(
+            str(Path(
+                '..', 'pdfs', 'processed',
+                Path(source_file).with_suffix('.pdf').name
+            ))
+        )
+        l_meta['srcindex'].append(new_idx)
+        l_meta['srctext'].append(source_text)
+    l_meta['response'] = new_ai_msg
+    if interactive:
+        output = '\n --- QUERY --- \n' + \
+            query + '\n\n --- RESPONSE --- \n' + \
+            new_ai_msg + '\n\n --- CITATIONS --- \n' + \
+            '\n\n'.join(l_bib)
+        return output
+    return l_meta
+    
 if __name__ == '__main__':
     rootdir, k, query = argv[1], int(argv[2]), argv[3]
     global_init(rootdir)
