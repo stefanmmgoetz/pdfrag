@@ -10,3 +10,4 @@ secret.txt
 *.ipynb
 src/__pycache__
 *.csv
+.env

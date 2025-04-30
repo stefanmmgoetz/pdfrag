@@ -1,4 +1,6 @@
 pymupdf4llm
+pymupdf
+ocrmypdf
 tqdm
 langchain
 langchain-core
@@ -11,3 +13,4 @@ pandas
 chromadb
 nicegui
 pywebview
+numpy<2

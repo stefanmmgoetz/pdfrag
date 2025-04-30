@@ -11,20 +11,23 @@ This program does the following:
 
 ### MacOS
 
-After unzipping the program folder:
-
-```bash
-cd pdfrag # wherever this is on your hard drive
-scripts/install.sh
-```
-
-This will install the Homebrew package manager (if not already installed), and set up proper version of Python (for the main program) and zenity (for the limited GUI elements).
+After unzipping the program folder, simply right click on the install.command file, press open, and press ok on the warning message (I am a trusted developer lol). This will install the Homebrew package manager (if not already installed), and set up proper version of Python (for the main program) and zenity (for the limited GUI elements).
 
 ### Windows
 
 Coming soon...
 
-## Usage (MacOS only for now)
+## Usage
+
+### MacOS
+
+The first time you run it, right click and then press open and press ok on warning. On subsequent attempts, can double click.
+
+### Windows 
+
+Coming soon...
+
+## --- may be obsolete ---
 
 The functionality of this program is split into a set of functions, which are contained within the "scripts" folder. To run the scripts, the recommended approach is to do it thru the terminal, from the main program directory:
 

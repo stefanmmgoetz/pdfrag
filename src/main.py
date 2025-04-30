@@ -107,8 +107,7 @@ def main():
     ui.run(
         native=True,
         reload=False,
-        title='PDFRAG',
-        favicon='https://emoji.slack-edge.com/T029PC1PHFX/cowboy_fish/b2aafc7878421216.png'
+        title='PDFRAG'
     )
 
 l_responses = []

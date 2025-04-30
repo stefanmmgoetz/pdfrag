@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain.vectorstores import Chroma
+# from langchain.vectorstores import Chroma
+from langchain_chroma import Chroma
 from sys import argv
 import pandas as pd
 
@@ -30,5 +31,5 @@ def query_db(dbpath: str, csvpath: str, query: str, k: int = 50):
     df_response.to_csv(csvpath)
 
 if __name__ == '__main__':
-    dbpath, csvpath, query = argv[1], argv[2], argv[3]
-    query_db(dbpath, csvpath, query)
+    dbpath, csvpath, query, k = argv[1], argv[2], argv[3], int(argv[4])
+    query_db(dbpath, csvpath, query, k)

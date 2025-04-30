@@ -3,10 +3,11 @@
 ROOT=$(dirname $(dirname $0))
 cd $ROOT
 source env/bin/activate
+source .env
 
 if [ ! -f secret.txt ]; then
 	if [[ $(uname) == 'Darwin' ]]; then
-		SECRET=$(/opt/homebrew/bin/zenity --file-selection --title="Select secret file")
+		SECRET=$($BINDIR/zenity --file-selection --title="Select secret file")
 		cp $SECRET secret.txt
 	else
 		echo 'API key file not detected... please drop secret.txt into the program directory to run queries.'
